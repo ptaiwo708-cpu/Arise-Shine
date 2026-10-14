@@ -1,0 +1,34 @@
+CREATE DATABASE IF NOT EXISTS arise_shine CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE arise_shine;
+
+CREATE TABLE IF NOT EXISTS admins (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(100) NOT NULL UNIQUE,
+  password VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS products (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(150) NOT NULL,
+  description TEXT,
+  image VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS orders (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  full_name VARCHAR(150) NOT NULL,
+  phone VARCHAR(30) NOT NULL,
+  address VARCHAR(255) NOT NULL,
+  product VARCHAR(150) NOT NULL,
+  quantity INT UNSIGNED NOT NULL DEFAULT 1,
+  message TEXT,
+  status ENUM('Pending','Processing','Completed','Cancelled') NOT NULL DEFAULT 'Pending',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Default admin: username admin, password admin123
+INSERT INTO admins (username, password)
+SELECT 'admin', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC4F2R6R6Jj7J2c2s8fK'
+WHERE NOT EXISTS (SELECT 1 FROM admins WHERE username = 'admin');
